@@ -125,12 +125,12 @@ HMS-4T   V01.01.12 -> V02.00.04
       0x15 sub-command.
     - Handler-side 2% floor removed (the controller floor remains).
     - Two limit ceilings (rated ramp + soft-start/DTU-loss) instead of one.
-    - 0x51 sub-command set: 0x22/0x28 present; 0x1E-0x21, 0x32, 0xFF dropped.
+    - 0x51 sub-command set: 0x06 (ACK only) and 0x22 added, 0x28 kept; 0x1E (state-2
+      trigger), 0x1F/0x20 (GPIO test toggles), 0x21 (timed flag), 0x32 and 0xFF (Init)
     - Frame receive/validate and telemetry/record builder re-implemented.
   Removed:
-    - MainCmd 0x31 (raw parameter-block write) dropped from the dispatcher.
-  Note (correction): the 2% floor and the 5-tick hysteresis were already in 1.1.12;
-  an earlier entry here listed them as new in 2.0.04.
+    - MainCmd 0x31 dropped from the dispatcher.
+
 
 HMS-4T   V01.01.12 -> V01.01.18 (Thailand)
   Added:
