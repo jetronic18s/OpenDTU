@@ -34,7 +34,7 @@ Two simple rules explain how they combine:
   DPL alone never switches the inverter fully off — a real shut-off uses a separate off command.
 - Across firmware versions and models (observed):
     - HMS-4T V01.00.27 — basic limit: cap + smooth ramp only.
-    - HMS-4T V01.01.12 — adds per-input (per-MPPT) connect/disconnect handling.
+    - HMS-4T V01.01.12 — adds per-input (per-MPPT) connect/disconnect handling (PDL).
     - HMS-4T V02.00.04 — adds the guaranteed ~2% minimum and applies limit changes more
       smoothly (reworked into one controller).
     - HMS-2T (V01.00.08 through V01.03.09) — basic limit only (cap + ramp); no per-input
