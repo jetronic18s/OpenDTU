@@ -37,7 +37,7 @@ Deux règles simples expliquent leur combinaison :
   passe par une commande d'arrêt distincte.
 - Selon les versions de firmware et les modèles (observé) :
     - HMS-4T V01.00.27 — limite de base : plafonnement + rampe douce uniquement.
-    - HMS-4T V01.01.12 — ajoute une gestion connexion/déconnexion par entrée (par MPPT).
+    - HMS-4T V01.01.12 — ajoute une gestion connexion/déconnexion par entrée (par MPPT)(PDL).
     - HMS-4T V02.00.04 — ajoute le minimum garanti (~2 %) et applique les changements de limite plus
       en douceur (regroupé en un seul régulateur).
     - HMS-2T (V01.00.08 à V01.03.09) — limite de base uniquement (plafonnement + rampe) ; pas de
