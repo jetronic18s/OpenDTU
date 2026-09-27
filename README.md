@@ -32,7 +32,7 @@ update 20:15_27_09_26:
 
 If you want to downgrade or upgrade your Hoymiles Inverter Firmware have a look here (This tool contains entire OpenDTUonEncryption):
 
-[Nichtlachen Hoymiles Inverter Firmware Update Function](https://github.com/tbnobody/OpenDTU/discussions/3168)
+[Nichtlachen Hoymiles Inverter Firmware Update Tool](https://github.com/tbnobody/OpenDTU/discussions/3168)
 
 [Main Discord Channel](https://discord.com/channels/984173303147155506/1547311994300928040)
 
