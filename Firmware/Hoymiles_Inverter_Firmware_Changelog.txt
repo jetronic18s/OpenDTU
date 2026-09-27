@@ -122,8 +122,7 @@ HMS-4T   V01.01.12 -> V02.00.04
       word echoed by SystemConfigPara for volatile commands; the echoed limit is the
       persistent word only (default 1100 permille). Volatile limits still apply and
       persist in RAM until the next command or restart, but cannot be read back by any
-      0x15 sub-command. (Root cause of the OpenDTU "limit reverts to 100% after ~4 min"
-      reports - that delay is OpenDTU's read-back schedule, not a firmware timer.)
+      0x15 sub-command.
     - Handler-side 2% floor removed (the controller floor remains).
     - Two limit ceilings (rated ramp + soft-start/DTU-loss) instead of one.
     - 0x51 sub-command set: 0x22/0x28 present; 0x1E-0x21, 0x32, 0xFF dropped.
