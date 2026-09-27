@@ -35,7 +35,7 @@ Zwei einfache Regeln erklären das Zusammenspiel:
   Abschaltung erfolgt über einen separaten Aus-Befehl.
 - Über Firmware-Versionen und Modelle (beobachtet):
     - HMS-4T V01.00.27 — einfache Begrenzung: nur Kappen + weiche Rampe.
-    - HMS-4T V01.01.12 — kommt mit Zu-/Abschaltung pro Eingang (pro MPPT) dazu.
+    - HMS-4T V01.01.12 — kommt mit Zu-/Abschaltung pro Eingang (pro MPPT) dazu (PDL).
     - HMS-4T V02.00.04 — zusätzlich das garantierte ~2%-Minimum und weichere Anwendung der
       Grenze (in einen Regler zusammengefasst).
     - HMS-2T (V01.00.08 bis V01.03.09) — nur einfache Begrenzung (Kappen + Rampe); keine
