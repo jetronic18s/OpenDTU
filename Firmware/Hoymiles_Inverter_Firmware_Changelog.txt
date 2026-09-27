@@ -88,31 +88,62 @@ HMS-2T / HMS-W-2T   V01.00.08 -> V01.03.09
 HMS-4T   V01.00.27 -> V01.01.12
   Added:
     - DC-input fault detector, alarm code 223 (0xDF).
-    - Dynamic power limit: per-channel connect/disconnect margin (throttle-down and
-      reconnect gated per MPPT input).
+    - Power Distribution Logic (PDL v1): the per-input limit applier was replaced.
+      1.0.27 split the limit into four equal quarters; 1.1.12 redistributes it
+      proportionally across the producing inputs, with a 5-tick up/down ramp
+      hysteresis, a controller-side 2% floor and a per-input -48 reconnect margin.
   Changed:
-    - Nothing else of substance.
+    - ActivePowerControl (0x51/0x0B) persistence bit: only type bit 1 (0x0002) makes
+      a limit persistent. 1.0.27 persisted on any type bit except bit 0, so the
+      HM-style 0x0100/0x0101 types are volatile from here on (0x0002/0x0003 persist).
+    - Volatile-limit floor moved to 20 permille in the handler (was 0.02 fraction).
   Removed:
     - Nothing.
 
 HMS-4T   V01.01.12 -> V02.00.04
   Added:
-    - Connect/disconnect decision logic in the new controller.
-    - Dynamic power limit: guaranteed ~2% minimum floor on the applied limit.
+    - DevControl sub-command 0x22: "zero-export / DTU-loss management" parameters
+      (enable, comm timeout in 0.1 s, fallback mode, ramp interval/step, fallback
+      limit). Defaults: disabled, 10 s, mode 0 (zero output), 10% fallback. Writing it
+      also applies the persistent limit and saves the record.
+    - DTU-loss machinery: when enabled, a silent DTU forces the limit ceiling to 0
+      (mode 0) or to the fallback limit (mode 1), with a ramp-up after recovery.
+    - Compact "group control" command handler (gated by the same enable flag).
+    - SystemConfigPara record type 3 (18 words / 36 bytes); an upgraded unit keeps
+      answering type 1 until the first persistent write re-stamps the record.
+    - PDL v2 in the controller: fair share over the inputs that actually produce (not
+      /4), reduction taken only from inputs above their share, measured-power seeding
+      on the first drop below rated, continuous commit after the 5-tick debounce,
+      entry threshold +20 W (was +2 W), a config gate back to plain equal split, a
+      zero-limit latch (<= 19 permille treated as stop), per-input 537 W cap, per-input
+      ceiling parameters in RAM (were ROM).
   Changed:
-    - Dynamic power limit applier consolidated into one control loop (limit ramping
-      with 5-tick up/down hysteresis, min/max clamping against rated/per-input ceilings).
+    - ActivePowerControl 0x0B no longer writes the commanded value into the record
+      word echoed by SystemConfigPara for volatile commands; the echoed limit is the
+      persistent word only (default 1100 permille). Volatile limits still apply and
+      persist in RAM until the next command or restart, but cannot be read back by any
+      0x15 sub-command. (Root cause of the OpenDTU "limit reverts to 100% after ~4 min"
+      reports - that delay is OpenDTU's read-back schedule, not a firmware timer.)
+    - Handler-side 2% floor removed (the controller floor remains).
+    - Two limit ceilings (rated ramp + soft-start/DTU-loss) instead of one.
+    - 0x51 sub-command set: 0x22/0x28 present; 0x1E-0x21, 0x32, 0xFF dropped.
     - Frame receive/validate and telemetry/record builder re-implemented.
   Removed:
-    - Nothing.
+    - MainCmd 0x31 (raw parameter-block write) dropped from the dispatcher.
+  Note (correction): the 2% floor and the 5-tick hysteresis were already in 1.1.12;
+  an earlier entry here listed them as new in 2.0.04.
 
 HMS-4T   V01.01.12 -> V01.01.18 (Thailand)
   Added:
     - Nothing.
   Changed:
-    - Regional grid-code re-tuning (voltage/frequency trip limits; exact numbers).
+    - Regional grid-code re-tuning (voltage/frequency trip limits; exact numbers
+      not resolvable from flash).
+    - Command layer is 1.1.x (bit-1 persistence, 20 permille floor, volatile limit
+      echoed in SystemConfigPara).
   Removed:
-    - Nothing.
+    - PDL: the main-loop limit applier is the 1.0.x equal-quarter split. None of the
+      1.1.12 PDL controller (hysteresis, -48 margin, redistribution) is present.
 
 
 HMT-6T   V01.00.10 -> V01.02.27
