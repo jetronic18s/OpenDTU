@@ -134,7 +134,9 @@ HMS-4T   V01.01.12 -> V02.00.04
 
 HMS-4T   V01.01.12 -> V01.01.18 (Thailand)
   Added:
-    - Nothing.
+    - MainCmd 0x30 self-test / inspection command family (sub 0x00/0x01 start-stop
+      flags, 0x02 + one parameter, 0x03 + five parameters, 0xFF abort); procedures
+      1 and 2 with result tables read back through the 0x30 reply path.
   Changed:
     - Regional grid-code re-tuning (voltage/frequency trip limits; exact numbers
       not resolvable from flash).
@@ -143,6 +145,42 @@ HMS-4T   V01.01.12 -> V01.01.18 (Thailand)
   Removed:
     - PDL: the main-loop limit applier is the 1.0.x equal-quarter split. None of the
       1.1.12 PDL controller (hysteresis, -48 margin, redistribution) is present.
+
+
+HMS-4T   V01.01.18 (Thailand) -> V01.01.29  (Thailand) (build 2026-08-25, model 0x1012)
+  Lineage: 141 functions byte-identical with 1.1.18-TH, 80 with 1.1.12, 71 with
+  2.0.04 -> 1.1.29 continues the 1.1.18 branch. The 2.0.x line is separate: none of
+  its features (DevControl 0x22 DTU-loss management, type-3 SystemConfigPara, PDL v2)
+  is present, and MainCmd 0x31 is still there.
+  Added:
+    - Self-test family (MainCmd 0x30) extended: new procedure 3, a state machine
+      over the four DC inputs that drives the input switch GPIOs, waits up to 2000
+      ticks per step and judges the result against thresholds taken from the 0x30
+      sub 0x03 parameters (x0.1 and x0.02); 9-word result table. Procedure 2 (per-
+      input measurement) re-implemented with a new executor; 17-word result table.
+    - Real-time record: new status/flags word at record word 0x24 (procedure state
+      bits from the 0x490/0x496 flag words and DC-input state bits). Whether the
+      DTU-visible reply length includes it was not traced.
+  Changed:
+    - Reactive-power setpoint selection (Q modes 0-5): the model-specific corrections
+      keyed on rated power (1600/1800/2000 W with fixed +/-6..50 offsets) were removed
+      in favour of generic thresholds (0.72 / 0.21 of rated; -16 / +24 / +8 and
+      -36 / -6 / +20); routine shrank from 1001 to 371 words.
+    - Grid-support derating ramp (both channels): the event-recording side effect was
+      taken out of the ramp step and a direction-locked clamp was added.
+    - Parsed 0x50-tagged parameter record lost one 32-bit field (struct shifted by
+      two words); task scheduler lost its one-shot callback slot; the mode-5 branch of
+      the input-power scaling was removed.
+  Removed:
+    - MainCmd 0x52 sub-command 0x04 (three-word write into the device record, guarded
+      by tag 0xFF07). Sub-commands 0x00-0x03 remain.
+  Unchanged (relevant for DTU software):
+    - Command layer is 1.1.x: 0x51 set incl. 0x1E-0x21, 0x32, 0xFF; no 0x22 / 0x06;
+      0x15 set as in 1.1.18 (0x0C-0x0F gone since 1.1.18, no 0x17, hidden 0xFF
+      selector present); ActivePowerControl persists on type bit 1 only, 20 permille
+      floor, volatile limit echoed in SystemConfigPara (type-1 record).
+    - No PDL: the main-loop limit applier is the equal-quarter split, as in 1.1.18.
+    - Config-record layouts 1-4, temperature-derating floats F27-F29, alarm catalog.
 
 
 HMT-6T   V01.00.10 -> V01.02.27
