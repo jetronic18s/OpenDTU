@@ -15,7 +15,9 @@ file without any help from the DTU:
                                       matches this file; mirrors
                                       kFirmwareSerialRules in src/WebApi_devinfo.cpp
   * size / sha256 / rows           -- for integrity checks after download
-  * date                           -- last git commit date of the file
+  * date                           -- firmware build timestamp decoded from the
+                                      file's own header (falls back to the git
+                                      commit date, then file mtime)
 
 Run from the repository root:
 
@@ -111,6 +113,37 @@ def format_version(code: int) -> str:
     return f"{code // 10000}.{(code // 100) % 100}.{code % 100}"
 
 
+def decode_build_date(version_code: int, data_payloads: list[bytes]) -> str | None:
+    """Decode the firmware build timestamp from the sector header.
+
+    Right after the version word the header stores three more words that, like
+    the version, carry a decimal value in their hex word: the year, MMDD
+    (month*100 + day) and HHMM (hour*100 + minute). For example the byte
+    sequence 27 21 07 E7 02 76 06 71 decodes to version 0x2721 = 1.00.17 built
+    2023-06-30 16:49. Returns an ISO 8601 timestamp (no timezone, as the file
+    carries none) or None when no valid stamp is found.
+    """
+    vhi, vlo = (version_code >> 8) & 0xFF, version_code & 0xFF
+    for payload in data_payloads:
+        for i in range(len(payload) - 7):
+            if payload[i] != vhi or payload[i + 1] != vlo:
+                continue
+            year = (payload[i + 2] << 8) | payload[i + 3]
+            mmdd = (payload[i + 4] << 8) | payload[i + 5]
+            hhmm = (payload[i + 6] << 8) | payload[i + 7]
+            month, day = mmdd // 100, mmdd % 100
+            hour, minute = hhmm // 100, hhmm % 100
+            if (
+                2000 <= year <= 2099
+                and 1 <= month <= 12
+                and 1 <= day <= 31
+                and 0 <= hour <= 23
+                and 0 <= minute <= 59
+            ):
+                return f"{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:00"
+    return None
+
+
 def git_commit_date(path: Path, repo_root: Path) -> str | None:
     try:
         out = subprocess.run(
@@ -175,6 +208,7 @@ def analyze_hex(path: Path, repo_root: Path) -> dict:
     has_eof = False
     identity: list[int] | None = None
     version_code: int | None = None
+    data_payloads: list[bytes] = []
 
     for line_no, line in enumerate(text.splitlines(), start=1):
         if not line.strip():
@@ -191,6 +225,10 @@ def analyze_hex(path: Path, repo_root: Path) -> dict:
         rows += 1
         if record_type == 0x01:
             has_eof = True
+        if record_type == 0x00:
+            # payload is data[4 : 4+byte_count]; the build timestamp lives in the
+            # first sector's data record, right after the version word.
+            data_payloads.append(bytes(data[4:4 + data[0]]))
         if identity is None:
             # First row is the vendor identity row: LL=06, type 0x11, then
             # [4]=const 0x10 [5]=phase/inputType [6]=dsp/newGen2 [7]=newGen3/bType
@@ -211,6 +249,12 @@ def analyze_hex(path: Path, repo_root: Path) -> dict:
         if rule[0] in ALLOWED_SERIAL_PREFIXES and identity_matches_rule(identity, rule)
     )
 
+    date = (
+        decode_build_date(version_code, data_payloads)
+        or git_commit_date(path, repo_root)
+        or datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).isoformat(timespec="seconds")
+    )
+
     return {
         "size": len(raw),
         "sha256": hashlib.sha256(raw).hexdigest(),
@@ -219,6 +263,7 @@ def analyze_hex(path: Path, repo_root: Path) -> dict:
         "version_code": version_code,
         "version": format_version(version_code),
         "serial_prefixes": prefixes,
+        "date": date,
     }
 
 
@@ -274,8 +319,8 @@ def main() -> int:
             "name": path.stem,
             "family": family_of(rel),
             "folder": rel.parent.as_posix() if str(rel.parent) != "." else "",
-            "date": git_commit_date(path, repo_root)
-            or datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).isoformat(timespec="seconds"),
+            # "date" comes from info: the build timestamp decoded from the file,
+            # falling back to git commit date / mtime (see analyze_hex).
             **info,
         }
         seen_sha[info["sha256"]] = entry
