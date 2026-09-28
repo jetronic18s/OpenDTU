@@ -3,7 +3,7 @@ Hoymiles Inverter DSP Firmware — Change Log
 ================================================================================
 Scope: HM (1T/2T/4T), HMS (1T/2T/4T), HMT (6T).
 
-HM-1T   V01.00.17 -> V01.01.00
+HM-1T   V01.00.17 -> V01.01.00   (built 2024-01)
   Added:
     - Control loop soft-foldback limiter (scales input down ~0.1x on overshoot).
     - Grid-frequency in-band debounce counter.
@@ -27,7 +27,7 @@ HM-1T   V01.01.00 -> V01.05.00   (built 2026-08-12)
   Removed:
 	- 
 
-HM-2T   V01.00.16 -> V01.01.02
+HM-2T   V01.00.16 -> V01.01.02   (built 2024-01)
   Added:
     - Control loop soft-foldback limiter.
     - Grid-frequency in-band debounce counter.
@@ -49,7 +49,7 @@ HM-2T   V01.01.02 -> V01.05.01   (built 2026-08-07)
   Removed:
     - 
 
-HM-4T   V01.00.18 -> V01.01.03
+HM-4T   V01.00.18 -> V01.01.03   (built 2024-02)
   Added:
     - Control loop soft-foldback limiter.
     - Grid-frequency in-band debounce counter.
@@ -72,10 +72,11 @@ HM-4T   V01.01.03 -> V01.05.00   (built 2026-08-10)
 
 HMS-1T
   - Two builds on different chips, no version-to-version delta available:
-    MI V02.00.02 (TMS320F2803x) and B V02.00.00 (F280049). Nothing to diff.
+    MI V02.00.02 (TMS320F2803x, built 2025-12) and B V02.00.00 (F280049,
+    built 2025-09). Nothing to diff.
 
 
-HMS-2T / HMS-W-2T   V01.00.08 -> V01.03.09
+HMS-2T / HMS-W-2T   V01.00.08 -> V01.03.09   (built 2024-10)
   Added:
     - Expanded telemetry / measurement scaling and formatting.
   Changed:
@@ -85,7 +86,7 @@ HMS-2T / HMS-W-2T   V01.00.08 -> V01.03.09
     - Nothing.
 
 
-HMS-4T   V01.00.27 -> V01.01.12
+HMS-4T   V01.00.27 -> V01.01.12   (built 2024-09)
   Added:
     - DC-input fault detector, alarm code 223 (0xDF).
     - Power Distribution Logic (PDL v1): the per-input limit applier was replaced.
@@ -100,7 +101,7 @@ HMS-4T   V01.00.27 -> V01.01.12
   Removed:
     - Nothing.
 
-HMS-4T   V01.01.12 -> V02.00.04
+HMS-4T   V01.01.12 -> V02.00.04   (built 2024-12)
   Added:
     - DevControl sub-command 0x22: "zero-export / DTU-loss management" parameters
       (enable, comm timeout in 0.1 s, fallback mode, ramp interval/step, fallback
@@ -132,7 +133,7 @@ HMS-4T   V01.01.12 -> V02.00.04
     - MainCmd 0x31 dropped from the dispatcher.
 
 
-HMS-4T   V01.01.12 -> V01.01.18 (Thailand)
+HMS-4T   V01.01.12 -> V01.01.18 (Thailand)   (built 2024-12)
   Added:
     - MainCmd 0x30 self-test / inspection command family (sub 0x00/0x01 start-stop
       flags, 0x02 + one parameter, 0x03 + five parameters, 0xFF abort); procedures
@@ -183,7 +184,7 @@ HMS-4T   V01.01.18 (Thailand) -> V01.01.29  (Thailand) (build 2026-08-25, model 
     - Config-record layouts 1-4, temperature-derating floats F27-F29, alarm catalog.
 
 
-HMT-6T   V01.00.10 -> V01.02.27
+HMT-6T   V01.00.10 -> V01.02.27   (built 2024-06)
   Added:
     - Record / Waveform mode: MainCmd 0x32 configures a triggered per-channel data
       recorder; captured data read back via SubCmd 0x13.
