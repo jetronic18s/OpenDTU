@@ -1,7 +1,8 @@
 # OpenDTUonEncryption
-
-This OpenDTU fork will allow you to easily use your encrypted Hoymiles Inverter.
+----------------------------------------------------------------------
+#This OpenDTU fork will allow you to easily use your encrypted Hoymiles Inverter.
 Not recommended for production use, use on your own risk!
+----------------------------------------------------------------------
 
 Known hoymiles inverter firmware versions that need encryption:
 
@@ -18,8 +19,13 @@ Hoymiles HM 1T/2T/4T fimware 1.5.x  (1.5.0/1.5.1/1.5.0)
 
 
 
+[Discussion Channel](https://github.com/tbnobody/OpenDTU/discussions/3238)
+
+
 If you want to downgrade or upgrade the firmware of your unencrypted Hoymiles Inverter have a look here:
+
 [Nichtlachen Hoymiles Inverter Firmware Update Tool](https://github.com/tbnobody/OpenDTU/discussions/3168)
+
 
 [Main Discord Channel](https://discord.com/channels/984173303147155506/1547311994300928040)
 
