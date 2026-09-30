@@ -1,6 +1,6 @@
 # OpenDTUonEncryption
 ----------------------------------------------------------------------
-#This OpenDTU fork will allow you to easily use your encrypted Hoymiles Inverter.
+# This OpenDTU fork will allow you to easily use your encrypted Hoymiles Inverter.
 Not recommended for production use, use on your own risk!
 ----------------------------------------------------------------------
 
