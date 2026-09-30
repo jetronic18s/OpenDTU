@@ -12,6 +12,10 @@ Hoymiles HM 1T/2T/4T fimware 1.5.x  (1.5.0/1.5.1/1.5.0)
 
 
 
+[OpenDTUonEncryption_factory_2026-09-30_21-25.zip](https://github.com/user-attachments/files/32873248/OpenDTUonEncryption_factory_2026-09-30_21-25.zip)
+
+[OpenDTUonEncryption_firmware_2026-09-30_21-25.zip](https://github.com/user-attachments/files/32873245/OpenDTUonEncryption_firmware_2026-09-30_21-25.zip)
+
 
 
 If you want to downgrade or upgrade the firmware of your unencrypted Hoymiles Inverter have a look here:
